@@ -101,7 +101,6 @@ public class Chess {
     }
 
     public ChessMove bestMove(ArrayList<ChessMove> moves) {
-        int max = Integer.MIN_VALUE;
         ChessMove chessMove = board.bestMove(moves);
 
         System.out.println();
