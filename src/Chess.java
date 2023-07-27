@@ -36,11 +36,27 @@ public class Chess {
                 this.listOutMoves(moves);
                 ChessMove bestMove = this.bestMove(moves);
 
+                // turn this on when the player enters an option (eg - verbosity mode change) but not a move
+                boolean isAMove = true;
+
                 if (board.whiteToPlay && humanPlaysWhite) {
-                    System.out.print("Your move? ");
+                    System.out.print("Your move? (or v or nv) ");
                     String moveString = myScanner.nextLine();
-                    ChessMove myMove = new ChessMove(moveString);
-                    board.move(myMove);
+                    if (moveString.equals("v")) {
+                        // go into verbose mode
+                        board.setVerbose(true);
+                        isAMove = false;
+                    }
+                    if (moveString.equals("nv")) {
+                        // go into terse mode
+                        board.setVerbose(false);
+                        isAMove = false;
+                    }
+
+                    if (isAMove) {
+                        ChessMove myMove = new ChessMove(moveString);
+                        board.move(myMove);
+                    }
                 }
                 else {
                     board.move(bestMove);

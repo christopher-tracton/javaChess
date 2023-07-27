@@ -6,6 +6,7 @@ public class Board {
     History history;
     Piece board[][];
     boolean whiteToPlay = true;
+    boolean verbose = true;
     int layer = 1;
     int maxLayers;
 
@@ -13,6 +14,7 @@ public class Board {
         board = new Piece[8][8];
         initialSetup();
         this.maxLayers = maxLayers;
+        this.verbose = true;
         history = new History();
     }
 
@@ -28,11 +30,14 @@ public class Board {
         layer = boardToCopy.layer + 1;
         history = new History(boardToCopy.history);
         maxLayers = boardToCopy.maxLayers;
+        verbose = boardToCopy.verbose;
     }
 
+    public void setVerbose(boolean verboseIn) {
+        this.verbose = verboseIn;
+    }
 
     public void takeIfOpposite(ArrayList<ChessMove> retval, int row1, int col1, int row2, int col2) {
-        int moveValue;
         Piece target = board[row2][col2];
         Piece source = board[row1][col1];
 
@@ -50,7 +55,7 @@ public class Board {
         int moveValue = this.value(stopPos);
         ChessMove move = new ChessMove(startPos, stopPos, moveValue);
 
-        int BRV = 0;
+        int BRV;
 
         if ((this.layer == 2) && (moveValue == 1000)) {
             BRV = 0;  // just consider the move.value which has already been assigned to move
@@ -233,15 +238,18 @@ public class Board {
             possibleBoard.move(possibleMove);
             ArrayList<ChessMove> possibleResponses = possibleBoard.legalMoves();
             bestResponse = this.bestMove(possibleResponses);
-            System.out.print("\n");
-            for (int i = 1; i < layer; i++)
-                System.out.print("\t");
-            System.out.print("layer : " + layer + " after " + (whiteToPlay?"WHITE ":"BLACK ") + possibleMove + (whiteToPlay?" BLACK ":" WHITE ") + bestResponse + " with value " + bestResponse.value + " follows");
-            try {
-                Thread.sleep(150);
-            }
-            catch(Exception e) {
 
+            if (verbose || layer == 1) {
+                System.out.print("\n");
+                for (int i = 1; i < layer; i++)
+                    System.out.print("\t");
+                System.out.print("layer : " + layer + " after " + (whiteToPlay?"WHITE ":"BLACK ") + possibleMove + (whiteToPlay?" BLACK ":" WHITE ") + bestResponse + " with value " + bestResponse.value + " follows");
+                try {
+                    Thread.sleep(100);
+                }
+                catch(Exception e) {
+
+                }
             }
         }
 
